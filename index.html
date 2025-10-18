@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ESP32 即時電壓</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
+</head>
+<body>
+  <h1>ESP32 即時電壓：</h1>
+  <h2 id="voltage">載入中...</h2>
+
+  <script>
+    // ⚠️ 這裡換成你的 Firebase 資料庫 URL
+    const firebaseConfig = {
+      databaseURL: "https://test-cd0d6-default-rtdb.firebaseio.com/"
+    };
+
+    // 初始化 Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database(app);
+
+    // 監聽資料變化
+    db.ref("data/value").on("value", (snapshot) => {
+      const value = snapshot.val();
+      const voltage = (value / 4095 * 3.3).toFixed(2); // 換算電壓
+      document.getElementById("voltage").innerText = voltage + " V";
+    });
+  </script>
+</body>
+</html>
